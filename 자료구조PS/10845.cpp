@@ -20,9 +20,9 @@ typedef struct queue {
 		list[end++] = val;
 	}
 
-	int pop() 
+	int pop()
 	{
-		if (empty()) return - 1;
+		if (empty()) return -1;
 
 		int result = list[start];
 		list[start++] = 0;
@@ -52,14 +52,12 @@ typedef struct queue {
 	{
 		if (empty()) return -1;
 
-		return list[end-1];
+		return list[end - 1];
 	}
 
 } queue;
 
-
-
-int main() 
+int main()
 {
 	int n, val;
 	cin >> n;
@@ -83,7 +81,7 @@ int main()
 		else if (cmd == "empty") {
 			cout << Q.empty() << '\n';
 		}
-		else if (cmd == "front"){
+		else if (cmd == "front") {
 			cout << Q.front() << '\n';
 		}
 		else if (cmd == "back") {

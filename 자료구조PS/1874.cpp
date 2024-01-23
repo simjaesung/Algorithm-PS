@@ -1,48 +1,38 @@
-#include <iostream>
-#include <string>
-#include <stack>
-
+#include<iostream>
+#include<stack>
 using namespace std;
 
 int main()
 {
-	int n;
-	cin >> n;
+	int n; cin >> n;
+	string ans;
+	stack<int>s;
 
-	int* arr = new int[n];
-
-	for (int i = 0; i < n; i++)
-		cin >> arr[i];
-
-	int num = 1, cnt = 0;
-
-	stack<int> stack;
-	string s = "";
-	
-	while (cnt < n) {
-
-		if (stack.empty()){
-			stack.push(num++);
-			s += '+';
+	int cnt = 0;
+	while (n--) {
+		int val; cin >> val;
+		if (val > cnt) {
+			int tmp = val - cnt;
+			while (tmp--) {
+				ans += '+';
+				s.push(++cnt);
+			}
+			s.pop();
+			ans += '-';
 		}
 		else {
-			if (arr[cnt] > stack.top()) {
-				stack.push(num++);
-				s += '+';
+			while (!s.empty() && s.top() != val) {
+				s.pop();
+				ans += '-';
 			}
-			else if (arr[cnt] == stack.top()) {
-				stack.pop();
-				s += '-';
-				cnt++;
+			if (s.empty() || s.top() != val) {
+				cout << "NO"; return 0;
 			}
-			else if (arr[cnt] < stack.top()) {
-				s = "NO";
-				return 0;
-			}
-		}
+			s.pop();
+			ans += '-';
+		}	
 	}
-	for (auto x :s)
-		cout << x << '\n';
+	for (auto& x : ans) cout << x << '\n';
 	
 	return 0;
 }
