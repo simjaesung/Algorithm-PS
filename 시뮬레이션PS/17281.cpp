@@ -1,9 +1,9 @@
 #include<iostream>
+#include<algorithm>
 #include<vector>
 using namespace std;
 
 int arr[55][15];
-
 
 int main()
 {
@@ -12,56 +12,52 @@ int main()
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= 9; j++) cin >> arr[i][j];
 	}
-
+	//타자 순서
+	int b[] = { 1,2,3,4,5,6,7,8 };
 	int ans = 0;
 
-	for (int i = 1; i <= 9; i++) {
+	do {
 		int score = 0;
-		int turn = i, ing = 1; 
-		int out = 0; vector<int>j;
+		int turn = 0; int idx = 0;
 
-		//한개의 이닝 당
-		while (ing <= n) {
-			
-			if (out == 3) {
-				out = 0;
-				ing++; j.clear();
+		for (int ing = 1; ing <= n; ing++) {
+			int out = 0; //아웃은 이닝별로
+			int cnt = 0; //홈에들어온 주자들
+
+			vector<int>j; //주자
+
+			while (out < 3) {
+				turn %= 9; idx %= 8;
+				int t, tmp; //타자 순서와 무슨 안타를 쳤는지
+
+				if (turn == 3) t = 1; //4번타자
+				else t = b[idx++] + 1;
+				turn++;
+
+				tmp = arr[ing][t];
 				
-				cout <<"score: " << score << '\n';
-				
-				continue;
-			}
-			cout << ing << ' ' << turn << '\n';
-			
-			int val = 0;
-			
-			if (arr[ing][turn] == 1) val = 1;
-			else if (arr[ing][turn] == 2) val = 2;
-			else if (arr[ing][turn] == 3) val = 3;
-			else if (arr[ing][turn] == 4) val = 4;
-			else out++;
+				if (tmp == 0) {
+					out++; continue;
+				}
 
-			if (turn == 4) val = arr[ing][1];
+				//타자친 주자 진루
+				j.push_back(tmp);
 
-			if (val != 0) {
-				j.push_back(0);
-				for (int k = 0; k < j.size(); k++) {
-					if (j[k] == -1) continue;
+				//진루해있던 타자들 진루
+				for (int i = cnt; i < j.size()-1; i++) j[i] += tmp;
 
-					j[k] += val;
-					if (j[k] > 3) {
-						score++;
-						j[k] = -1;
-					}
+				//홈에 들어온 타자 표시
+				for (int i = cnt; i < j.size(); i++) {
+					if (j[i] > 3) cnt++;
 				}
 			}
+			score += cnt;
 
-			turn = (turn + 1) % 10;
-			if (turn == 0) turn += 2;
 		}
-		ans = max(score,ans);
-	}
-	
+		ans = max(score, ans);
+
+	} while (next_permutation(b, b + 8));
+
 	cout << ans;
 	return 0;
 }
